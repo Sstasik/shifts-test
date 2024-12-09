@@ -1,6 +1,6 @@
 import { useEffect } from "react";
-import { useForm, Controller } from "react-hook-form";
-import { Section, IEmployyes, IUpdatedShift, IShift } from "@/types";
+import { useForm, Controller, ControllerRenderProps } from "react-hook-form";
+import { Section, IEmployyes, IUpdatedShift, IShift, IFormValues } from "@/types";
 import { IoMdClose } from "react-icons/io";
 
 type Props = {
@@ -40,7 +40,7 @@ const EditMenu = ({ shiftId, onMenuExit, employees, onSave, shifts }: Props) => 
     }
   }, [shiftId, shifts, setValue]);
 
-  const onSubmit = (data: any) => {
+  const onSubmit = (data: IFormValues) => {
     const updatedShift: IUpdatedShift = {
       id: shiftId!,
       timeInterval: {
@@ -161,7 +161,7 @@ const EditMenu = ({ shiftId, onMenuExit, employees, onSave, shifts }: Props) => 
               <Controller
                 name="isNonCountedShift"
                 control={control}
-                render={({ field }: any) => (
+                render={({ field }: { field: ControllerRenderProps<any, "isNonCountedShift"> }) => (
                   <>
                     <input
                       type="checkbox"

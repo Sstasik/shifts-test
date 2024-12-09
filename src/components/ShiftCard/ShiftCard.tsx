@@ -3,7 +3,6 @@ import { useDrag } from "react-dnd";
 import { IShift } from "@/types";
 import { MdCancel, MdNotes } from "react-icons/md";
 import {
-  FaRegCopy,
   FaRegClock,
   FaRegPauseCircle,
   FaRegMoneyBillAlt,
@@ -38,8 +37,8 @@ const ShiftCard = ({
   const [isContextMenuOpen, setIsContextMenuOpen] = useState(false);
   const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });
 
-  const ref = useRef<HTMLDivElement>(null); 
-  drag(ref); 
+  const ref = useRef<HTMLDivElement>(null);
+  drag(ref);
 
   const handleContextMenuOpen = (event: React.MouseEvent) => {
     event.preventDefault();
@@ -92,12 +91,14 @@ const ShiftCard = ({
             ? "#eefca1"
             : "#f8f9ff",
       }}
-      ref={ref} 
+      ref={ref}
       className={`w-full max-w-[180px]  flex flex-col gap-1 overflow-hidden border border-gray-200 rounded-lg p-4 cursor-grab ${
         isDragging ? "opacity-50" : ""
       }`}
       onContextMenu={handleContextMenuOpen}
-      onDoubleClick={() => {onShiftEdit(id)}}
+      onDoubleClick={() => {
+        onShiftEdit(id);
+      }}
     >
       <div className="w-full flex items-center justify-between">
         <h2 className="text-lg font-medium">

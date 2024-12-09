@@ -57,3 +57,14 @@ export interface IUpdatedShift {
   employeeId?: string;
 }
 
+export interface IFormValues {
+  start: string;
+  end: string;
+  paidBreak: string;
+  unpaidBreak: string;
+  hrCode: string;
+  isNonCountedShift: boolean;
+  section: Section | undefined;
+  employeeId: string;
+}
+
