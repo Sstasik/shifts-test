@@ -54,10 +54,6 @@ const ShiftCard = ({
     setIsContextMenuOpen(false);
   };
 
-  const handleCopy = () => {
-    handleMenuClose();
-  };
-
   const handleEdit = () => {
     handleMenuClose();
     onShiftEdit(id);
@@ -69,7 +65,6 @@ const ShiftCard = ({
   };
 
   const contextMenuButtons = [
-    { name: "Copy", icon: <FaRegCopy />, callback: handleCopy },
     { name: "Edit", icon: <MdNotes />, callback: handleEdit },
     { name: "Delete", icon: <MdCancel color="red" />, callback: handleDelete },
   ];
@@ -98,10 +93,11 @@ const ShiftCard = ({
             : "#f8f9ff",
       }}
       ref={ref} 
-      className={`w-full flex flex-col gap-1 overflow-hidden border border-gray-200 rounded-lg p-4 cursor-grab ${
+      className={`w-full max-w-[180px]  flex flex-col gap-1 overflow-hidden border border-gray-200 rounded-lg p-4 cursor-grab ${
         isDragging ? "opacity-50" : ""
       }`}
       onContextMenu={handleContextMenuOpen}
+      onDoubleClick={() => {onShiftEdit(id)}}
     >
       <div className="w-full flex items-center justify-between">
         <h2 className="text-lg font-medium">

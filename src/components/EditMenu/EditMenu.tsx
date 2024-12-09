@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
-import { Section, IShift, IEmployyes, IUpdatedShift } from "@/types";
+import { useEffect } from "react";
+import { useForm, Controller } from "react-hook-form";
+import { Section, IEmployyes, IUpdatedShift, IShift } from "@/types";
 import { IoMdClose } from "react-icons/io";
 
 type Props = {
@@ -10,78 +11,50 @@ type Props = {
   shifts: IShift[];
 };
 
-const EditMenu = ({
-  shiftId,
-  onMenuExit,
-  employees,
-  onSave,
-  shifts,
-}: Props) => {
-  const [start, setStart] = useState<string>("");
-  const [end, setEnd] = useState<string>("");
-  const [paidBreak, setPaidBreak] = useState<string>("");
-  const [unpaidBreak, setUnpaidBreak] = useState<string>("");
-  const [hrCode, setHrCode] = useState<string | null>(null);
-  const [isNonCountedShift, setIsNonCountedShift] = useState<boolean>(false);
-  const [section, setSection] = useState<Section | undefined>();
-  const [employeeId, setEmployeeId] = useState<string | undefined>(undefined);
+const EditMenu = ({ shiftId, onMenuExit, employees, onSave, shifts }: Props) => {
+  const { register, handleSubmit, control, setValue } = useForm({
+    defaultValues: {
+      start: "",
+      end: "",
+      paidBreak: "",
+      unpaidBreak: "",
+      hrCode: "",
+      isNonCountedShift: false,
+      section: undefined as Section | undefined,
+      employeeId: "",
+    },
+  });
 
   useEffect(() => {
     if (shiftId) {
       const foundShift = shifts.find((shift) => shift.id === shiftId);
-      const foundEmployy = employees.find(
-        (employee) => employee.id === foundShift?.id
-      );
-
-      if (foundShift && foundEmployy) {
-        setStart(foundShift.timeInterval.start);
-        setEnd(foundShift.timeInterval.end);
-        setPaidBreak(foundShift.paidBreak);
-        setUnpaidBreak(foundShift.unpaidBreak);
-        setHrCode(foundShift.hrCode);
-        setSection(foundShift.section);
-        setEmployeeId(foundShift.employeeId);
+      if (foundShift) {
+        setValue("start", foundShift.timeInterval.start);
+        setValue("end", foundShift.timeInterval.end);
+        setValue("paidBreak", foundShift.paidBreak);
+        setValue("unpaidBreak", foundShift.unpaidBreak);
+        setValue("hrCode", foundShift.hrCode || "");
+        setValue("section", foundShift.section);
+        setValue("employeeId", foundShift.employeeId || "");
       }
     }
-  }, [shiftId]);
+  }, [shiftId, shifts, setValue]);
 
-  const handleFormConfirm = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-
+  const onSubmit = (data: any) => {
     const updatedShift: IUpdatedShift = {
       id: shiftId!,
       timeInterval: {
-        start,
-        end,
+        start: data.start,
+        end: data.end,
       },
-      paidBreak,
-      unpaidBreak,
-      hrCode,
-      section,
-      employeeId,
+      paidBreak: data.paidBreak,
+      unpaidBreak: data.unpaidBreak,
+      hrCode: data.hrCode,
+      section: data.section,
+      employeeId: data.employeeId,
     };
     onSave(updatedShift);
     onMenuExit();
-  };
-
-  const handleSectionChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedSection = event.target.value as Section;
-    setSection(selectedSection);
-  };
-
-  const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setIsNonCountedShift(event.target.checked);
-  };
-
-  const handleEmployeeChange = (
-    event: React.ChangeEvent<HTMLSelectElement>
-  ) => {
-    const selectedEmployeeId = event.target.value;
-    const employee = employees.find((emp) => emp.id === selectedEmployeeId);
-
-    if (employee) {
-      setEmployeeId(employee.id);
-    }
   };
 
   if (!shiftId) return null;
@@ -99,23 +72,12 @@ const EditMenu = ({
         </header>
 
         <main className="px-9 mt-8">
-          <div className="w-full font-bold mb-5">
-            <button className="w-1/2 border-[#e3e6f1] border-2 bg-[#e3e6f1] py-1">
-              Shift
-            </button>
-            <button className="w-1/2 border-[#e3e6f1] border-2 text-[#87898b] py-1">
-              Absence
-            </button>
-          </div>
-
-          <form onSubmit={handleFormConfirm} className="w-full relative">
+          <form onSubmit={handleSubmit(onSubmit)} className="w-full relative">
             <div>
-              <label className="block text-sm font-semibold mb-2">
-                Section
-              </label>
+              <label htmlFor="section" className="block text-sm font-semibold mb-2">Section</label>
               <select
-                onChange={handleSectionChange}
-                value={section}
+                {...register("section")}
+                id="section"
                 className="bg-[#f6f8fc] rounded-sm border border-[#edeff1] p-2 w-full outline-none text-black mb-4"
               >
                 {Object.values(Section).map((section) => (
@@ -127,12 +89,10 @@ const EditMenu = ({
             </div>
 
             <div>
-              <label className="block text-sm font-semibold mb-2">
-                Utilisateur
-              </label>
+              <label htmlFor="employeeId" className="block text-sm font-semibold mb-2">Utilisateur</label>
               <select
-                onChange={handleEmployeeChange}
-                value={employeeId || ""}
+                {...register("employeeId")}
+                id="employeeId"
                 className="bg-[#f6f8fc] rounded-sm border border-[#edeff1] p-2 w-full outline-none text-black mb-4"
               >
                 {employees.map((employee) => (
@@ -143,135 +103,92 @@ const EditMenu = ({
               </select>
             </div>
 
-            <div>
-              <label className="block text-sm font-semibold mb-2">
-                Competences
-              </label>
-              <input
-                className="bg-[#f6f8fc] rounded-sm border border-[#edeff1] p-2 w-full outline-none mb-4"
-                type="text"
-                placeholder="Selectionnez une..."
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-semibold mb-2">
-                Attributs
-              </label>
-              <input
-                className="bg-[#f6f8fc] rounded-sm border border-[#edeff1] p-2 w-full outline-none mb-4"
-                type="text"
-                placeholder="Selectionnez une..."
-              />
-            </div>
-
             <div className="flex gap-2 mb-5">
-              <div>
-                <label className="block text-sm font-semibold mb-2">
-                  Début
-                </label>
+              <div className="w-1/2">
+                <label htmlFor="start" className="block text-sm font-semibold mb-2">Début</label>
                 <input
                   type="time"
-                  required
-                  value={start}
-                  onChange={(e) => setStart(e.target.value)}
-                  className="bg-[#f6f8fc] rounded-sm border border-[#edeff1] p-2 outline-none"
+                  {...register("start", { required: true })}
+                  id="start"
+                  className="bg-[#f6f8fc] rounded-sm border border-[#edeff1] p-2 outline-none w-full"
                 />
               </div>
 
-              <div>
-                <label className="block text-sm font-semibold mb-2">Fin</label>
+              <div className="w-1/2">
+                <label htmlFor="end" className="block text-sm font-semibold mb-2">Fin</label>
                 <input
-                  required
                   type="time"
-                  value={end}
-                  onChange={(e) => setEnd(e.target.value)}
-                  className="bg-[#f6f8fc] rounded-sm border border-[#edeff1] p-2 outline-none"
+                  {...register("end", { required: true })}
+                  id="end"
+                  className="bg-[#f6f8fc] rounded-sm border border-[#edeff1] p-2 outline-none w-full"
                 />
-              </div>
-
-              <div className="w-[70%]">
-                <label className="block text-sm font-semibold mb-2">
-                  Raccourcis
-                </label>
-                <select className="w-full h-[44px] bg-[#f6f8fc] rounded-sm border border-[#edeff1] p-2 outline-none">
-                  <option>Raccourcis</option>
-                  <option>Raccourcis</option>
-                  <option>Raccourcis</option>
-                  <option>Raccourcis</option>
-                  <option>Raccourcis</option>
-                </select>
               </div>
             </div>
 
             <div className="flex gap-2">
               <div className="w-1/2">
-                <label className="block text-sm font-semibold mb-2">
-                  Pause payée
-                </label>
+                <label htmlFor="paidBreak" className="block text-sm font-semibold mb-2">Pause payée</label>
                 <input
                   type="time"
-                  value={paidBreak}
-                  onChange={(e) => setPaidBreak(e.target.value)}
+                  {...register("paidBreak")}
+                  id="paidBreak"
                   className="bg-[#f6f8fc] rounded-sm border border-[#edeff1] p-2 w-full outline-none"
                 />
               </div>
 
-              <div className="w-1/2 mb-4">
-                <label className="block text-sm font-semibold mb-2">
-                  Pause non payée
-                </label>
+              <div className="w-1/2">
+                <label htmlFor="unpaidBreak" className="block text-sm font-semibold mb-2">Pause non payée</label>
                 <input
                   type="time"
-                  value={unpaidBreak}
-                  onChange={(e) => setUnpaidBreak(e.target.value)}
+                  {...register("unpaidBreak")}
+                  id="unpaidBreak"
                   className="bg-[#f6f8fc] rounded-sm border border-[#edeff1] p-2 w-full outline-none"
                 />
               </div>
             </div>
 
-            <div className="w-full mb-4">
-              <label className="block text-sm font-semibold mb-2">
-                Code spécial RH
-              </label>
+            <div className="w-full my-4">
+              <label htmlFor="hrCode" className="block text-sm font-semibold mb-2">Code spécial RH</label>
               <input
                 type="text"
-                value={hrCode || ""}
-                onChange={(e) => setHrCode(e.target.value)}
+                {...register("hrCode")}
+                id="hrCode"
                 className="bg-[#f6f8fc] rounded-sm border border-[#edeff1] p-2 w-full outline-none"
               />
             </div>
 
             <div className="w-full mb-4">
-              <input
-                type="checkbox"
-                checked={isNonCountedShift}
-                onChange={handleCheckboxChange}
-                className="mr-2"
+              <Controller
+                name="isNonCountedShift"
+                control={control}
+                render={({ field }: any) => (
+                  <>
+                    <input
+                      type="checkbox"
+                      {...field}
+                      id="isNonCountedShift"
+                      className="mr-2"
+                    />
+                    <label htmlFor="isNonCountedShift">Shift non comptabilisé dans les heures prestées</label>
+                  </>
+                )}
               />
-              <label>Shift non comptabilisé dans les heures prestées</label>
             </div>
 
-            <div>
-              <p className="mb-5">
-                Dépassement des heures hebdomadaires maximales de 38 h. (+34 h)
-              </p>
-
-              <div className="w-full flex gap-6">
-                <button
-                  type="button"
-                  onClick={onMenuExit}
-                  className="bg-red-500 text-white py-2 px-4 rounded w-1/2"
-                >
-                  Annuler
-                </button>
-                <button
-                  type="submit"
-                  className="bg-green-500 text-white py-2 px-4 rounded w-1/2"
-                >
-                  Créer shift
-                </button>
-              </div>
+            <div className="w-full flex gap-6">
+              <button
+                type="button"
+                onClick={onMenuExit}
+                className="bg-red-500 text-white py-2 px-4 rounded w-1/2"
+              >
+                Annuler
+              </button>
+              <button
+                type="submit"
+                className="bg-green-500 text-white py-2 px-4 rounded w-1/2"
+              >
+                Créer shift
+              </button>
             </div>
           </form>
         </main>

@@ -71,68 +71,71 @@ const CalendarTable = ({
       </div>
 
       <table className="w-full border border-gray-400 table-auto">
-        <thead>
-          <tr>
-            <th className="border border-gray-300 p-2 text-center bg-[#f8f9ff]"></th>
-            {daysOfWeek.map((day) => (
-              <th
-                key={day.toISOString()}
-                className="border border-gray-300 p-2 text-center bg-[#f8f9ff]"
-              >
-                {day.format("ddd MMM DD")}
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {employyes.map((employee) => (
-            <tr key={employee.id}>
-              <td className="border border-gray-300 p-2 text-center w-[12%]">
-                <div className="flex gap-5 items-center">
-                  <Image
-                    width={56}
-                    height={56}
-                    src={
-                      employee.imgUrl
-                        ? employee.imgUrl
-                        : "https://cdn.icon-icons.com/icons2/1378/PNG/512/avatardefault_92824.png"
-                    }
-                    alt={employee.name}
-                    className="rounded-full"
-                  />
-                  <div className="flex gap-1 text-left flex-col">
-                    <h5>{employee.name}</h5>
-                  </div>
-                </div>
-              </td>
-              {daysOfWeek.map((day) => {
-                const drop = createDropTarget(day, employee.id);
+  <thead>
+    <tr>
+      <th
+        className="border border-gray-300 p-2 text-center bg-[#f8f9ff] w-[12%] min-h-[120px]"
+      ></th>
+      {daysOfWeek.map((day) => (
+        <th
+          key={day.toISOString()}
+          className="border border-gray-300 p-2 text-center bg-[#f8f9ff] w-[12%] h-[120px]"
+        >
+          {day.format("ddd MMM DD")}
+        </th>
+      ))}
+    </tr>
+  </thead>
+  <tbody>
+    {employyes.map((employee) => (
+      <tr key={employee.id}>
+        <td className="border border-gray-300 p-2 text-center w-[12%] h-[120px]">
+          <div className="flex gap-5 items-center">
+            <Image
+              width={56}
+              height={56}
+              src={
+                employee.imgUrl
+                  ? employee.imgUrl
+                  : "https://cdn.icon-icons.com/icons2/1378/PNG/512/avatardefault_92824.png"
+              }
+              alt={employee.name}
+              className="rounded-full"
+            />
+            <div className="flex gap-1 text-left flex-col">
+              <h5>{employee.name}</h5>
+            </div>
+          </div>
+        </td>
+        {daysOfWeek.map((day) => {
+          const drop = createDropTarget(day, employee.id);
 
-                return (
-                  <td
-                    key={day.toISOString()}
-                    ref={(node) => {
-                      if (node) drop(node);
-                    }}
-                    className="border border-gray-300 p-2 align-top"
-                  >
-                    <div className="flex flex-col gap-2 items-start">
-                      {getShiftsForDay(employee.id, day).map((shift) => (
-                        <ShiftCard
-                          onShiftEdit={onShiftEdit}
-                          key={shift.id}
-                          {...shift}
-                          onShiftDelete={onShiftDelete}
-                        />
-                      ))}
-                    </div>
-                  </td>
-                );
-              })}
-            </tr>
-          ))}
-        </tbody>
-      </table>
+          return (
+            <td
+              key={day.toISOString()}
+              ref={(node) => {
+                if (node) drop(node);
+              }}
+              className="border border-gray-300 p-2 align-top w-[190px] h-[120px]"
+            >
+              <div className="flex flex-col gap-2 items-start">
+                {getShiftsForDay(employee.id, day).map((shift) => (
+                  <ShiftCard
+                    onShiftEdit={onShiftEdit}
+                    key={shift.id}
+                    {...shift}
+                    onShiftDelete={onShiftDelete}
+                  />
+                ))}
+              </div>
+            </td>
+          );
+        })}
+      </tr>
+    ))}
+  </tbody>
+</table>
+
     </div>
   );
 };
