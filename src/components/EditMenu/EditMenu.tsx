@@ -156,25 +156,7 @@ const EditMenu = ({ shiftId, onMenuExit, employees, onSave, shifts }: Props) => 
                 className="bg-[#f6f8fc] rounded-sm border border-[#edeff1] p-2 w-full outline-none"
               />
             </div>
-
-            <div className="w-full mb-4">
-              <Controller
-                name="isNonCountedShift"
-                control={control}
-                render={({ field }: { field: ControllerRenderProps<any, "isNonCountedShift"> }) => (
-                  <>
-                    <input
-                      type="checkbox"
-                      {...field}
-                      id="isNonCountedShift"
-                      className="mr-2"
-                    />
-                    <label htmlFor="isNonCountedShift">Shift non comptabilisé dans les heures prestées</label>
-                  </>
-                )}
-              />
-            </div>
-
+          
             <div className="w-full flex gap-6">
               <button
                 type="button"
