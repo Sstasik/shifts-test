@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useForm, Controller, ControllerRenderProps } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { Section, IEmployyes, IUpdatedShift, IShift, IFormValues } from "@/types";
 import { IoMdClose } from "react-icons/io";
 
@@ -12,7 +12,7 @@ type Props = {
 };
 
 const EditMenu = ({ shiftId, onMenuExit, employees, onSave, shifts }: Props) => {
-  const { register, handleSubmit, control, setValue } = useForm({
+  const { register, handleSubmit, setValue } = useForm({
     defaultValues: {
       start: "",
       end: "",
