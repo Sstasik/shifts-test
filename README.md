@@ -1,15 +1,39 @@
-## Getting Started
+# Employee Schedule Management
 
-First, run the development server:
+This project is built with **Next.js** and **TypeScript**. It provides an interactive interface to manage employees' shifts for a single week. Users can drag and drop shifts across days, navigate between weeks, and edit shift details through a dedicated form.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+---
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Features
+
+### 1. **Employee Schedule Table**
+
+- Displays a weekly schedule with rows for employees and columns for days.
+- Allows users to view and manage shifts in an intuitive grid layout.
+
+### 2. **Drag and Drop Functionality**
+
+- Shifts can be moved between days using **`react-dnd`** for drag-and-drop operations.
+
+### 3. **Shift Editing**
+
+- Clicking on a shift card opens an **Edit Menu**, where users can modify all shift details. The same action can be done if user open the context menu in the card and select the Edit button
+- User can delete shift card with context menu and Delete button
+- The form is built with **`react-hook-form`** for efficient state management and validation.
+
+### 4. **Weekly Navigation**
+
+- Users can navigate between weeks to manage shifts for past or upcoming schedules.
+
+---
+
+## Tech Stack
+
+### **Frontend**
+
+- **Next.js**: Framework for server-side rendering and routing.
+- **TypeScript**: For strong typing and improved developer experience.
+- **React**: Component-based architecture.
+- **react-dnd**: Drag-and-drop functionality.
+- **react-hook-form**: Lightweight and flexible form handling.
+- **CSS Modules / Tailwind CSS (Optional)**: For styling components.
