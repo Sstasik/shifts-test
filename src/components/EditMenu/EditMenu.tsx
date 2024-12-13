@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Section, IEmployyes, IUpdatedShift, IShift, IFormValues } from "@/types";
 import { IoMdClose } from "react-icons/io";
@@ -12,7 +12,7 @@ type Props = {
 };
 
 const EditMenu = ({ shiftId, onMenuExit, employees, onSave, shifts }: Props) => {
-  const { register, handleSubmit, setValue } = useForm({
+  const { register, handleSubmit, setValue, watch, formState: { isDirty } } = useForm({
     defaultValues: {
       start: "",
       end: "",
@@ -24,6 +24,9 @@ const EditMenu = ({ shiftId, onMenuExit, employees, onSave, shifts }: Props) => 
       employeeId: "",
     },
   });
+
+  const [showModal, setShowModal] = useState(false);
+  const formValues = watch();
 
   useEffect(() => {
     if (shiftId) {
@@ -57,13 +60,30 @@ const EditMenu = ({ shiftId, onMenuExit, employees, onSave, shifts }: Props) => 
     onMenuExit();
   };
 
+  const handleExit = () => {
+    if (isDirty) {
+      setShowModal(true);
+    } else {
+      onMenuExit();
+    }
+  };
+
+  const handleCancelExit = () => {
+    setShowModal(false);
+  };
+
+  const handleConfirmExit = () => {
+    setShowModal(false);
+    onMenuExit();
+  };
+
   if (!shiftId) return null;
 
   return (
     <div className="w-full flex items-end h-full overflow-hidden fixed top-0 left-0 z-30 bg-black bg-opacity-80">
       <div className="h-full w-[40%] bg-[#fefefe] absolute top-0 right-0 overflow-auto pb-10">
         <header className="border-b-2 font-bold border-[#f9f9f9] px-9 py-4 flex gap-6">
-          <button onClick={onMenuExit} className="text-gray-500">
+          <button onClick={handleExit} className="text-gray-500">
             <IoMdClose size={20} />
           </button>
           <h4 className="text-[#252832] text-xl font-semibold">
@@ -160,7 +180,7 @@ const EditMenu = ({ shiftId, onMenuExit, employees, onSave, shifts }: Props) => 
             <div className="w-full flex gap-6">
               <button
                 type="button"
-                onClick={onMenuExit}
+                onClick={handleExit}
                 className="bg-red-500 text-white py-2 px-4 rounded w-1/2"
               >
                 Annuler
@@ -175,6 +195,28 @@ const EditMenu = ({ shiftId, onMenuExit, employees, onSave, shifts }: Props) => 
           </form>
         </main>
       </div>
+
+      {showModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-40">
+          <div className="bg-white p-6 rounded-md">
+            <h3 className="text-lg font-semibold">You have unsaved changes. Do you want to discard all changes?</h3>
+            <div className="mt-4 flex justify-end gap-4">
+              <button
+                onClick={handleCancelExit}
+                className="bg-gray-300 text-black py-2 px-4 rounded"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleConfirmExit}
+                className="bg-red-500 text-white py-2 px-4 rounded"
+              >
+                Discard
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -37,3 +37,19 @@ This project is built with **Next.js** and **TypeScript**. It provides an intera
 - **react-dnd**: Drag-and-drop functionality.
 - **react-hook-form**: Lightweight and flexible form handling.
 - **CSS Modules / Tailwind CSS (Optional)**: For styling components.
+
+---
+
+## Project Setup  
+
+Follow these steps to set up and run the project locally.  
+
+### 1. Open Your Terminal  
+- If you're using Visual Studio Code, you can open the integrated terminal by pressing:  
+  - Ctrl + ` on Windows  
+  - Cmd + ` on macOS  
+
+### 2. Start the Development Server  
+- Run the following command in your terminal:  
+  ```bash
+  npm run dev

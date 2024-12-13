@@ -27,8 +27,8 @@ const CalendarTable = ({
   onShiftEdit,
 }: Props) => {
   const [week, setWeek] = useState(() => {
-    const startOfWeek = dayjs().startOf("week").add(1, "day");
-    const endOfWeek = startOfWeek.add(6, "day");
+    const startOfWeek = dayjs("2024-12-02"); 
+    const endOfWeek = startOfWeek.add(6, "day"); 
     return { start: startOfWeek, end: endOfWeek };
   });
 
@@ -74,7 +74,7 @@ const CalendarTable = ({
           {employyes.map((employee) => (
             <tr key={employee.id}>
               <td className="border border-gray-300 p-2 text-center w-[12%] h-[120px]">
-                <div className="flex gap-5 items-center">
+                <div className="flex flex-col xl:flex-row gap-5 items-center">
                   <Image
                     width={56}
                     height={56}
@@ -86,7 +86,7 @@ const CalendarTable = ({
                     alt={employee.name}
                     className="rounded-full"
                   />
-                  <div className="flex gap-1 text-left flex-col">
+                  <div className="flex gap-1 xl:text-left text-center flex-col">
                     <h5>{employee.name}</h5>
                   </div>
                 </div>
