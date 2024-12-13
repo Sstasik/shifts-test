@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Section, IEmployyes, IUpdatedShift, IShift, IFormValues } from "@/types";
 import { IoMdClose } from "react-icons/io";
+import UnsavedChangesModal from "../UnsavedChangesModal/UnsavedChangesModal";
 
 type Props = {
   shiftId: string | null;
@@ -12,7 +13,7 @@ type Props = {
 };
 
 const EditMenu = ({ shiftId, onMenuExit, employees, onSave, shifts }: Props) => {
-  const { register, handleSubmit, setValue, watch, formState: { isDirty } } = useForm({
+  const { register, handleSubmit, setValue, formState: { isDirty } } = useForm({
     defaultValues: {
       start: "",
       end: "",
@@ -196,25 +197,7 @@ const EditMenu = ({ shiftId, onMenuExit, employees, onSave, shifts }: Props) => 
       </div>
 
       {showModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-40">
-          <div className="bg-white p-6 rounded-md">
-            <h3 className="text-lg font-semibold">You have unsaved changes. Do you want to discard all changes?</h3>
-            <div className="mt-4 flex justify-end gap-4">
-              <button
-                onClick={handleCancelExit}
-                className="bg-gray-300 text-black py-2 px-4 rounded"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleConfirmExit}
-                className="bg-red-500 text-white py-2 px-4 rounded"
-              >
-                Discard
-              </button>
-            </div>
-          </div>
-        </div>
+        <UnsavedChangesModal handleCancelExit={handleCancelExit} handleConfirmExit={handleConfirmExit}/>
       )}
     </div>
   );
