@@ -26,7 +26,6 @@ const EditMenu = ({ shiftId, onMenuExit, employees, onSave, shifts }: Props) => 
   });
 
   const [showModal, setShowModal] = useState(false);
-  const formValues = watch();
 
   useEffect(() => {
     if (shiftId) {
